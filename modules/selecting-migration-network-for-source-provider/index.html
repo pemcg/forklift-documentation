@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+
+    
+    <meta charset="UTF-8">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Forklift Documentation | Forklift documentation</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Forklift Documentation" />
+<meta name="author" content="Red Hat Modernization and Migration Solutions documentation team" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Forklift documentation" />
+<meta property="og:description" content="Forklift documentation" />
+<meta property="og:site_name" content="Forklift Documentation" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Forklift Documentation" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"Red Hat Modernization and Migration Solutions documentation team"},"url":"/modules/selecting-migration-network-for-source-provider/","description":"Forklift documentation","@type":"WebPage","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/assets/img/forklift-logo-darkbg.svg"},"name":"Red Hat Modernization and Migration Solutions documentation team"},"headline":"Forklift Documentation","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#157878">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="stylesheet" href="/assets/css/style.css?v=5c266955b895ec4f92493ddf95f23883255b32d6">
+    <link rel="shortcut icon" type="image/png" href="images/favicon.png">
+  </head>
+  <body>
+    <header class="page-header">
+        
+          <a href="/"><img src="/assets/img/forklift-logo-darkbg.svg" alt="Forklift Documentation" width="200" /></a><br>
+        
+      
+        <a href="https://github.com/konveyor/forklift-documentation" class="btn">View on GitHub</a>
+      
+      
+    </header>
+
+    <main id="content" class="main-content" role="main">
+      <div class="sect1">
+<h2 id="selecting-migration-network-for-source-provider_forklift">Selecting a migration network for a source provider</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Select a migration network to reduce risk to the VMware environment and to improve migration performance.</p>
+</div>
+<div class="paragraph">
+<p>By default,  Forklift selects the <em>management</em> network of a source provider. However, using the management network for migration can result in poor performance because the network might not have sufficient bandwidth. This situation can have a negative effect on the VMware platform because the disk transfer operation might saturate the network and impede communication between vCenter and the ESXi hosts.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>The migration network must have sufficient throughput, minimum speed of 10 Gbps, for disk transfer.</p>
+</li>
+<li>
+<p>The migration network must be accessible to the KubeVirt nodes through the default gateway.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The source virtual disks are copied by a pod that is connected to the pod network of the target namespace.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>The migration network must have jumbo frames enabled.</p>
+</li>
+<li>
+<p>You must have administrator privileges for each ESXi host.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>In the web console, navigate to <strong>Providers</strong> and click <strong>VMware</strong>.</p>
+</li>
+<li>
+<p>Click the host number in the <strong>Hosts</strong> column beside a VMware provider to view a list of hosts.</p>
+</li>
+<li>
+<p>Select one or more hosts and click <strong>Select migration network</strong>.</p>
+</li>
+<li>
+<p>Complete the following fields:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Network</strong>: Select the migration network.</p>
+</li>
+<li>
+<p><strong>Host admin username</strong>: Specify the ESXi host admin user name, for example, <code>root</code>.</p>
+</li>
+<li>
+<p><strong>Host admin password</strong>: Specify the ESXi host password.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Click <strong>Save</strong>.</p>
+</li>
+<li>
+<p>Verify that the status of each host is <strong>Ready</strong>.</p>
+<div class="paragraph">
+<p>If a host status is not <strong>Ready</strong>, the host might be unreachable on the migration network or the credentials might be incorrect. You can modify the host configuration and save the changes.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The migration network is displayed in the list of ESXi hosts.</p>
+</div>
+</div>
+</div>
+
+      <footer class="site-footer">
+        
+          <span class="site-footer-owner"><a href="https://github.com/konveyor/forklift-documentation">forklift-documentation</a> is maintained by <a href="https://github.com/konveyor">konveyor</a>.</span>
+        
+      </footer>
+    </main>
+  </body>
+</html>

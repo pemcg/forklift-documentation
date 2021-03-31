@@ -1,0 +1,1903 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+
+    
+    <meta charset="UTF-8">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Installing and using Forklift | Forklift Documentation</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Installing and using Forklift" />
+<meta name="author" content="Red Hat Modernization and Migration Solutions documentation team" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Forklift documentation" />
+<meta property="og:description" content="Forklift documentation" />
+<meta property="og:site_name" content="Forklift Documentation" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Installing and using Forklift" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"Red Hat Modernization and Migration Solutions documentation team"},"url":"/documentation/doc-Migration_Toolkit_for_Virtualization/master/","description":"Forklift documentation","@type":"WebPage","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/assets/img/forklift-logo-darkbg.svg"},"name":"Red Hat Modernization and Migration Solutions documentation team"},"headline":"Installing and using Forklift","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#157878">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="stylesheet" href="/assets/css/style.css?v=5c266955b895ec4f92493ddf95f23883255b32d6">
+    <link rel="shortcut icon" type="image/png" href="images/favicon.png">
+  </head>
+  <body>
+    <header class="page-header">
+        
+          <a href="/"><img src="/assets/img/forklift-logo-darkbg.svg" alt="Forklift Documentation" width="200" /></a><br>
+        
+      
+        <a href="https://github.com/konveyor/forklift-documentation" class="btn">View on GitHub</a>
+      
+      
+    </header>
+
+    <main id="content" class="main-content" role="main">
+      <h1>Installing and using Forklift (2.0-beta)</h1>
+<div id="toc" class="toc">
+<div id="toctitle"></div>
+<ul class="sectlevel1">
+<li><a href="#about-mtv_forklift">About  Forklift</a>
+<ul class="sectlevel2">
+<li><a href="#mtv-resources-and-services_forklift">Custom resources and services</a></li>
+<li><a href="#mtv-workflow_forklift">Forklift  workflow</a></li>
+<li><a href="#virt-migration-workflows_forklift">KubeVirt migration workflow</a></li>
+<li><a href="#about-storage_forklift">Storage support and default modes</a></li>
+</ul>
+</li>
+<li><a href="#installing-mtv_forklift">Installing  Forklift</a>
+<ul class="sectlevel2">
+<li><a href="#installing-mtv-console_forklift">Installing  Forklift by using the OKD web console</a>
+<ul class="sectlevel3">
+<li><a href="#adding-vddk-to-mtv_forklift">Creating a VDDK image</a></li>
+<li><a href="#increasing-esxi-nfc-service-memory_forklift">Increasing the NFC service memory of an ESXi host</a></li>
+</ul>
+</li>
+<li><a href="#installing-mtv-cli_forklift">Installing  Forklift from the CLI</a>
+<ul class="sectlevel3">
+<li><a href="#adding-vddk-to-mtv_forklift">Creating a VDDK image</a></li>
+<li><a href="#increasing-esxi-nfc-service-memory_forklift">Increasing the NFC service memory of an ESXi host</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#migrating-virtual-machines-to-virt_forklift">Migrating virtual machines to KubeVirt</a>
+<ul class="sectlevel2">
+<li><a href="#migrating-vms-web-console_forklift">Migrating virtual machines by using the Forklift web console</a>
+<ul class="sectlevel3">
+<li><a href="#adding-virt-provider_forklift">Adding the KubeVirt provider</a></li>
+<li><a href="#adding-source-provider_forklift">Adding a source provider</a></li>
+<li><a href="#creating-network-mapping_forklift">Creating a network mapping</a></li>
+<li><a href="#creating-storage-mapping_forklift">Creating a storage mapping</a></li>
+<li><a href="#creating-migration-plan_forklift">Creating a migration plan</a></li>
+<li><a href="#running-migration-plan_forklift">Running a migration plan</a></li>
+</ul>
+</li>
+<li><a href="#migrating-virtual-machines-cli_forklift">Migrating virtual machines from the CLI</a></li>
+</ul>
+</li>
+<li><a href="#uninstalling-mtv_forklift">Uninstalling  Forklift</a>
+<ul class="sectlevel2">
+<li><a href="#uninstalling-mtv-ui_forklift">Uninstalling Forklift by using the OKD web console</a></li>
+<li><a href="#uninstalling-mtv-cli_forklift">Uninstalling Forklift from the CLI</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="sect1">
+<h2 id="about-mtv_forklift">About  Forklift</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p> Forklift enables you to migrate virtual machines from VMware 6.5, and later, to KubeVirt.</p>
+</div>
+<div class="paragraph">
+<p>KubeVirt is an add-on to OKD 4.7 that allows you to run and manage virtual machine workloads alongside container workloads.</p>
+</div>
+<div class="sect2">
+<h3 id="mtv-resources-and-services_forklift">Custom resources and services</h3>
+<div class="paragraph">
+<p> Forklift is provided in the form of an operator. It creates and manages the following custom resources (CRs) and services.</p>
+</div>
+<div class="ulist">
+<div class="title">Custom resources</div>
+<ul>
+<li>
+<p><code>Provider</code> CR: Stores attributes that enable Forklift to connect to and interact with the source and target providers.</p>
+</li>
+<li>
+<p><code>NetworkMapping</code> CR: Maps the networks of the source and target providers.</p>
+</li>
+<li>
+<p><code>StorageMapping</code> CR: Maps the storage of the source and target providers.</p>
+</li>
+<li>
+<p><code>Provisioner</code> CR: Stores the configuration of the storage provisioners, such as supported volume and access modes.</p>
+</li>
+<li>
+<p><code>Plan</code> CR: Contains a list of VMs that are migrated together with the same migration parameters and associated network and storage mappings.</p>
+</li>
+<li>
+<p><code>Migration</code> CR: Runs a migration plan.</p>
+<div class="paragraph">
+<p>Only one <code>Migration</code> CR per migration plan can run at a given time. You can create multiple <code>Migration</code> CRs for a single <code>Plan</code> CR.</p>
+</div>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Services</div>
+<ul>
+<li>
+<p>Provider Inventory service:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Connects to the source and target providers</p>
+</li>
+<li>
+<p>Maintains a local inventory for mappings and plans</p>
+</li>
+<li>
+<p>Stores VM configurations</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>User Interface service:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Enables you to create and configure Forklift CRs.</p>
+</li>
+<li>
+<p>Displays the status of the CRs and the progress of a migration</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Controller services:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Perform actions with CRs in response to user requests.</p>
+</li>
+<li>
+<p>The Migration Controller service orchestrates migrations.</p>
+<div class="paragraph">
+<p>When you create a migration plan, the Migration Controller validates the plan and adds a status label. If the plan fails validation, the plan status is <code>Not ready</code> and the plan cannot be used to perform a migration. If the plan passes validation, the plan status is <code>Ready</code> and it can be used to perform a migration. After a successful migration, the Migration Controller changes the plan status to <code>Completed</code>.</p>
+</div>
+</li>
+<li>
+<p>The Virtual Machine Import Controller, Kubevirt Controller, and Containerized Data Import (CDI) Controller services handle most technical operations.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="mtv-workflow_forklift">Forklift  workflow</h3>
+<div class="paragraph">
+<p>You can migrate virtual machines (VMs) using the Forklift console or the command line.</p>
+</div>
+<div class="paragraph">
+<p>The following diagram is a high-level view of the migration workflow.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../modules/images/136_Upstream_Migration_Toolkit_0121_mtv-workflow.svg" alt="Forklift workflow">
+</div>
+<div class="title">Figure 1. Forklift workflow</div>
+</div>
+<div class="paragraph">
+<p>The Forklift workflow comprises the following steps:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>You create a source provider, a target provider, a network mapping, and a storage mapping.</p>
+</li>
+<li>
+<p>You create a migration plan that includes the following resources:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Source provider</p>
+</li>
+<li>
+<p>Target provider</p>
+</li>
+<li>
+<p>Network mapping</p>
+</li>
+<li>
+<p>Storage mapping</p>
+</li>
+<li>
+<p>One or more VMs</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>You run a migration plan by creating a <code>Migration</code> CR that references the migration plan. If a migration is incomplete, you can run a migration plan multiple times until all VMs are migrated.</p>
+</li>
+<li>
+<p>For each VM in the migration plan, the Migration Controller creates a <code>VirtualMachineImport</code> CR and monitors its status. When all VMs have been migrated, the Migration Controller sets the status of the migration plan to <code>Completed</code>. The power state of a source VM is maintained after migration.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="virt-migration-workflows_forklift">KubeVirt migration workflow</h3>
+<div class="paragraph">
+<p>The KubeVirt workflow provides a detailed view of the process of migrating virtual machines (VMs).</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../modules/images/136_Upstream_Migration_Toolkit_0121_virt-workflow.svg" alt="KubeVirt workflow">
+</div>
+<div class="title">Figure 2. KubeVirt workflow</div>
+</div>
+<div class="paragraph">
+<p>The KubeVirt workflow comprises the following steps:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>When you run a migration plan, the Migration Controller creates a <code>VirtualMachineImport</code> CR for each source VM.</p>
+</li>
+<li>
+<p>The Virtual Machine Import Controller validates the <code>VirtualMachineImport</code> CR and generates a <code>VirtualMachine</code> CR</p>
+</li>
+<li>
+<p>The Virtual Machine Import Controller retrieves the VM configuration, including network, storage, and metadata, linked in the <code>VirtualMachineImport</code> CR.  </p>
+<div class="paragraph">
+<p><em>For each VM disk:</em></p>
+</div>
+</li>
+<li>
+<p>The Virtual Machine Import Controller creates a <code>DataVolume</code> CR as a wrapper for a Persistent Volume Claim (PVC) and annotations.  </p>
+</li>
+<li>
+<p>The Containerized Data Importer (CDI) Controller creates a PVC. The Persistent Volume (PV) is dynamically provisioned by the <code>StorageClass</code> provisioner.  </p>
+</li>
+<li>
+<p>The CDI Controller creates an <code>Importer</code> pod.</p>
+</li>
+<li>
+<p>The <code>Importer</code> pod connects to the source VM disk, using the VDDK SDK, and streams the disk to the PV.</p>
+</li>
+<li>
+<p><em>After the VM disks are transferred</em>, the Virtual Machine Import Controller creates a <code>Conversion</code> pod with the PVCs attached to it. The <code>Conversion</code> pod runs <code>virt-v2v</code>, which installs and configures device drivers on the PVCs of the target VM.</p>
+</li>
+<li>
+<p>The Virtual Machine Import Controller creates a <code>VirtualMachineInstance</code> CR.</p>
+</li>
+<li>
+<p>When the target VM is powered on, the KubeVirt Controller creates a VM pod. The VM pod runs <code>QEMU-KVM</code> with the PVCs attached as VM disks.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="about-storage_forklift">Storage support and default modes</h3>
+<div class="paragraph">
+<p>Forklift supports <a href="https://docs.openshift.com/container-platform/4.7/virt/virtual_machines/importing_vms/virt-importing-vmware-vm.html#virt-features-for-storage-matrix_virt-importing-vmware-vm">KubeVirt storage features</a>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If the KubeVirt storage does not support <a href="https://docs.openshift.com/container-platform/4.7/storage/dynamic-provisioning.html">dynamic provisioning</a>, Forklift applies the default settings, <code>Filesystem</code> volume mode and <code>ReadWriteOnce</code> access mode. <code>Filesystem</code> volume mode is slower than <code>Block</code> volume mode. <code>ReadWriteOnce</code> access mode does not enable live VM migration.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Forklift uses the following default volume and access modes.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Default volume and access modes</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Provisioner</th>
+<th class="tableblock halign-left valign-top">Volume mode</th>
+<th class="tableblock halign-left valign-top">Access mode</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">kubernetes.io/aws-ebs</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Block</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ReadWriteOnce</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">kubernetes.io/azure-disk</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Block</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ReadWriteOnce</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">kubernetes.io/azure-file</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Filesystem</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ReadWriteMany</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">kubernetes.io/cinder</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Block</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ReadWriteOnce</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">kubernetes.io/gce-pd</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Block</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ReadWriteOnce</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">kubernetes.io/hostpath-provisioner</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Filesystem</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ReadWriteOnce</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">manila.csi.openstack.org</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Filesystem</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ReadWriteMany</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">openshift-storage.cephfs.csi.ceph.com</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Filesystem</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ReadWriteMany</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">openshift-storage.rbd.csi.ceph.com</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Block</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ReadWriteOnce</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">kubernetes.io/rbd</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Block</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ReadWriteOnce</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">kubernetes.io/vsphere-volume</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Block</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ReadWriteOnce</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="installing-mtv_forklift">Installing  Forklift</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can install  Forklift by using the OKD web console or the command line interface (CLI).</p>
+</div>
+<div class="sect2">
+<h3 id="installing-mtv-console_forklift">Installing  Forklift by using the OKD web console</h3>
+<div class="paragraph">
+<p>You can install  Forklift by using the OKD web console.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>The source cluster must be VMware vSphere 6.5 or later.</p>
+</li>
+<li>
+<p>If you are performing more than 10 concurrent migrations from a single ESXi host, you must increase the NFC service memory of the host.</p>
+</li>
+<li>
+<p>You must install OKD 4.7 on the target cluster.</p>
+</li>
+<li>
+<p>You must install the KubeVirt Operator.</p>
+</li>
+<li>
+<p>You must log in as a user with <code>cluster-admin</code> permissions.</p>
+</li>
+<li>
+<p>VMware virtual machines:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://www.vmware.com/support/ws5/doc/new_guest_tools_ws.html">VMware Tools</a> must be installed.</p>
+</li>
+<li>
+<p>ISO/CDROM disks must be unmounted.</p>
+</li>
+<li>
+<p>A NIC must have no more than one IPv4 and/or one IPv6 address.</p>
+</li>
+<li>
+<p>The VM name can contain lowercase letters (<code>a-z</code>), numbers (<code>0-9</code>), and hyphens (<code>-</code>), up to a maximum of 253 characters. The first and last characters must be alphanumeric. The name must not contain uppercase letters, spaces, periods (<code>.</code>), or special characters.</p>
+</li>
+<li>
+<p>The VM name must not duplicate the name of a virtual machine in the KubeVirt environment.</p>
+</li>
+<li>
+<p>The operating system must be certified and supported <a href="https://access.redhat.com/articles/973163#ocpvirt">for use as a guest operating system with KubeVirt</a> <em>and</em> <a href="https://access.redhat.com/articles/1351473">for conversion to KVM with <code>virt-v2v</code></a>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Network:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>IP addresses, VLANs, and other network configuration settings must not be changed before or after migration. The MAC addresses of the virtual machines are preserved during migration.</p>
+</li>
+<li>
+<p>The network connections between the clusters and the replication repository must be uninterrupted and reliable.</p>
+</li>
+<li>
+<p>The firewall rules must enable traffic over the network ports required for migration.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 2. Required network ports</caption>
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 33.3336%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Port</th>
+<th class="tableblock halign-left valign-top">Protocol</th>
+<th class="tableblock halign-left valign-top">Source</th>
+<th class="tableblock halign-left valign-top">Destination</th>
+<th class="tableblock halign-left valign-top">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">443</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TCP</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OpenShift nodes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">VMware vCenter</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>VMware provider inventory</p>
+</div>
+<div class="paragraph">
+<p>Disk transfer authentication</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">443</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TCP</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OpenShift nodes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">VMware ESXi hosts</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Disk transfer authentication</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">902</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TCP</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OpenShift nodes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">VMware ESXi hosts</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Disk transfer data copy</p></td>
+</tr>
+</tbody>
+</table>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>In the OKD web console, navigate to <strong>Operators</strong> &#8594; <strong>OperatorHub</strong>.</p>
+</li>
+<li>
+<p>Use the <strong>Filter by keyword</strong> field to find the <strong>forklift-operator</strong>.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The forklift-operator is a Community Operator. Red Hat does not support Community Operators.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Click the forklift-operator and then click <strong>Install</strong>.</p>
+</li>
+<li>
+<p>On the <strong>Install Operator</strong> page, click <strong>Install</strong>.</p>
+</li>
+<li>
+<p>Click <strong>Operators</strong> &#8594; <strong>Installed Operators</strong> to verify that the forklift-operator appears in the <strong>konveyor-forklift</strong> project with the status <strong>Succeeded</strong>.</p>
+</li>
+<li>
+<p>Click the forklift-operator.</p>
+</li>
+<li>
+<p>Under <strong>Provided APIs</strong>, locate the <strong>ForkliftController</strong>, and click <strong>Create Instance</strong>.</p>
+</li>
+<li>
+<p>Click <strong>Create</strong>.</p>
+</li>
+<li>
+<p>Click <strong>Workloads</strong> &#8594; <strong>Pods</strong> to verify that the Forklift pods are running.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>After you have installed Forklift, you must create a VMware Virtual Disk Development Kit (VDDK) image.</p>
+</div>
+<div class="sect3">
+<h4 id="adding-vddk-to-mtv_forklift">Creating a VDDK image</h4>
+<div class="paragraph">
+<p>Forklift uses the VMware Virtual Disk Development Kit (VDDK) SDK to transfer virtual disks.</p>
+</div>
+<div class="paragraph">
+<p>You can download VDDK, build a VDDK image, push it to a private image registry, and then add the image to the <code>v2v-vmware</code> config map.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Storing the VDDK image in a public registry might violate the VMware license terms.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You must have access to an internal <a href="https://docs.openshift.com/container-platform/4.7/registry/configuring_registry_storage/configuring-registry-storage-baremetal.html">OKD image registry</a> or a secure <a href="https://docs.openshift.com/container-platform/4.7/registry/registry-options.html">external registry</a>.</p>
+</li>
+<li>
+<p>KubeVirt must have access to the image registry.</p>
+</li>
+<li>
+<p>You must have Podman installed.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Create and navigate to a temporary directory:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ mkdir /tmp/&lt;dir_name&gt; &amp;&amp; cd /tmp/&lt;dir_name&gt;</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>In a browser, navigate to the <a href="https://code.vmware.com/home">VMware code</a> site and click <strong>SDKs</strong>.</p>
+</li>
+<li>
+<p>In the <strong>Hyperconverged Infrastructure</strong> section, click <strong>Virtual Disk Development Kit (VDDK)</strong>.</p>
+</li>
+<li>
+<p>Select the latest VDDK version.</p>
+</li>
+<li>
+<p>Click <strong>Download</strong> and save the VDDK archive file in the temporary directory.</p>
+</li>
+<li>
+<p>Extract the VDDK archive:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ tar -xzf VMware-vix-disklib-&lt;version&gt;.x86_64.tar.gz</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create a <code>Dockerfile</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ cat &gt; Dockerfile &lt;&lt;EOF
+FROM busybox:latest
+COPY vmware-vix-disklib-distrib /vmware-vix-disklib-distrib
+RUN mkdir -p /opt
+ENTRYPOINT ["cp", "-r", "/vmware-vix-disklib-distrib", "/opt"]
+EOF</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Build the VDDK image:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ podman build . -t &lt;image&gt; <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Specify the image, for example, <code>image-registry.openshift-image-registry.svc:5000/openshift/vddk:latest</code> or <code>registry.example.com:5000/vddk:latest</code>.</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Push the VDDK image to the registry:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ podman push &lt;image&gt;</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Patch the <code>v2v-vmware</code> config map to add the <code>vddk-init-image</code> field:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ oc patch configmap/v2v-vmware -n openshift-cnv \
+    -p '{"data": {"vddk-init-image": "&lt;image&gt;"}}'</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="increasing-esxi-nfc-service-memory_forklift">Increasing the NFC service memory of an ESXi host</h4>
+<div class="paragraph">
+<p>If you are performing more than 10 concurrent migrations from a single ESXi host, you must increase the NFC service memory of the host to enable additional connections for migrations. Otherwise, the migration will fail because the NFC service memory is limited to 10 parallel connections.</p>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Log in to the ESXi host as root.</p>
+</li>
+<li>
+<p>Change the value of <code>maxMemory</code> to <code>1000000000</code> in <code>/etc/vmware/hostd/config.xml</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">...
+      &lt;nfcsvc&gt;
+         &lt;path&gt;libnfcsvc.so&lt;/path&gt;
+         &lt;enabled&gt;true&lt;/enabled&gt;
+         &lt;maxMemory&gt;1000000000&lt;/maxMemory&gt;
+         &lt;maxStreamMemory&gt;10485760&lt;/maxStreamMemory&gt;
+      &lt;/nfcsvc&gt;
+...</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Restart <code>hostd</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-terminal" data-lang="terminal"># /etc/init.d/hostd restart</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You do not need to reboot the host.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="installing-mtv-cli_forklift">Installing  Forklift from the CLI</h3>
+<div class="paragraph">
+<p>You can install  Forklift from the command line interface (CLI).</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>The source cluster must be VMware vSphere 6.5 or later.</p>
+</li>
+<li>
+<p>If you are performing more than 10 concurrent migrations from a single ESXi host, you must increase the NFC service memory of the host.</p>
+</li>
+<li>
+<p>You must install OKD 4.7 on the target cluster.</p>
+</li>
+<li>
+<p>You must install the KubeVirt Operator.</p>
+</li>
+<li>
+<p>You must log in as a user with <code>cluster-admin</code> permissions.</p>
+</li>
+<li>
+<p>VMware virtual machines:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://www.vmware.com/support/ws5/doc/new_guest_tools_ws.html">VMware Tools</a> must be installed.</p>
+</li>
+<li>
+<p>ISO/CDROM disks must be unmounted.</p>
+</li>
+<li>
+<p>A NIC must have no more than one IPv4 and/or one IPv6 address.</p>
+</li>
+<li>
+<p>The VM name can contain lowercase letters (<code>a-z</code>), numbers (<code>0-9</code>), and hyphens (<code>-</code>), up to a maximum of 253 characters. The first and last characters must be alphanumeric. The name must not contain uppercase letters, spaces, periods (<code>.</code>), or special characters.</p>
+</li>
+<li>
+<p>The VM name must not duplicate the name of a virtual machine in the KubeVirt environment.</p>
+</li>
+<li>
+<p>The operating system must be certified and supported <a href="https://access.redhat.com/articles/973163#ocpvirt">for use as a guest operating system with KubeVirt</a> <em>and</em> <a href="https://access.redhat.com/articles/1351473">for conversion to KVM with <code>virt-v2v</code></a>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Network:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>IP addresses, VLANs, and other network configuration settings must not be changed before or after migration. The MAC addresses of the virtual machines are preserved during migration.</p>
+</li>
+<li>
+<p>The network connections between the clusters and the replication repository must be uninterrupted and reliable.</p>
+</li>
+<li>
+<p>The firewall rules must enable traffic over the network ports required for migration.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 3. Required network ports</caption>
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 33.3336%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Port</th>
+<th class="tableblock halign-left valign-top">Protocol</th>
+<th class="tableblock halign-left valign-top">Source</th>
+<th class="tableblock halign-left valign-top">Destination</th>
+<th class="tableblock halign-left valign-top">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">443</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TCP</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OpenShift nodes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">VMware vCenter</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>VMware provider inventory</p>
+</div>
+<div class="paragraph">
+<p>Disk transfer authentication</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">443</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TCP</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OpenShift nodes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">VMware ESXi hosts</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Disk transfer authentication</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">902</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TCP</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OpenShift nodes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">VMware ESXi hosts</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Disk transfer data copy</p></td>
+</tr>
+</tbody>
+</table>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Create the konveyor-forklift project:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ cat &lt;&lt; EOF | oc apply -f -
+apiVersion: project.openshift.io/v1
+kind: Project
+metadata:
+  name: konveyor-forklift
+EOF</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create an <code>OperatorGroup</code> CR called <code>migration</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ cat &lt;&lt; EOF | oc apply -f -
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: migration
+  namespace: konveyor-forklift
+spec:
+  targetNamespaces:
+    - konveyor-forklift
+EOF</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create a <code>Subscription</code> CR for the Operator:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ cat &lt;&lt; EOF | oc apply -f -
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: forklift-operator
+  namespace: konveyor-forklift
+spec:
+  channel: development
+  installPlanApproval: Automatic
+  name: forklift-operator
+  source: community-operators
+  sourceNamespace: openshift-marketplace
+  startingCSV: "konveyor-forklift-operator.v2.0.0-beta.0"
+EOF</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create a <code>ForkliftController</code> CR:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ cat &lt;&lt; EOF | oc apply -f -
+apiVersion: forklift.konveyor.io/v1alpha1
+kind: ForkliftController
+metadata:
+  name: forklift-controller
+  namespace: konveyor-forklift
+spec:
+  olm_managed: true
+EOF</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Verify that the Forklift pods are running:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ oc get pods -n konveyor-forklift</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Example output</div>
+<div class="content">
+<pre>NAME                                   READY   STATUS    RESTARTS   AGE
+forklift-controller-788bdb4c69-mw268   2/2     Running   0          2m
+forklift-operator-6bf45b8d8-qps9v      1/1     Running   0          5m
+forklift-ui-7cdf96d8f6-xnw5n           1/1     Running   0          2m</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>After you have installed Forklift, you must create a VMware Virtual Disk Development Kit (VDDK) image.</p>
+</div>
+<div class="sect3">
+<h4 id="adding-vddk-to-mtv_forklift">Creating a VDDK image</h4>
+<div class="paragraph">
+<p>Forklift uses the VMware Virtual Disk Development Kit (VDDK) SDK to transfer virtual disks.</p>
+</div>
+<div class="paragraph">
+<p>You can download VDDK, build a VDDK image, push it to a private image registry, and then add the image to the <code>v2v-vmware</code> config map.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Storing the VDDK image in a public registry might violate the VMware license terms.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You must have access to an internal <a href="https://docs.openshift.com/container-platform/4.7/registry/configuring_registry_storage/configuring-registry-storage-baremetal.html">OKD image registry</a> or a secure <a href="https://docs.openshift.com/container-platform/4.7/registry/registry-options.html">external registry</a>.</p>
+</li>
+<li>
+<p>KubeVirt must have access to the image registry.</p>
+</li>
+<li>
+<p>You must have Podman installed.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Create and navigate to a temporary directory:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ mkdir /tmp/&lt;dir_name&gt; &amp;&amp; cd /tmp/&lt;dir_name&gt;</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>In a browser, navigate to the <a href="https://code.vmware.com/home">VMware code</a> site and click <strong>SDKs</strong>.</p>
+</li>
+<li>
+<p>In the <strong>Hyperconverged Infrastructure</strong> section, click <strong>Virtual Disk Development Kit (VDDK)</strong>.</p>
+</li>
+<li>
+<p>Select the latest VDDK version.</p>
+</li>
+<li>
+<p>Click <strong>Download</strong> and save the VDDK archive file in the temporary directory.</p>
+</li>
+<li>
+<p>Extract the VDDK archive:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ tar -xzf VMware-vix-disklib-&lt;version&gt;.x86_64.tar.gz</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create a <code>Dockerfile</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ cat &gt; Dockerfile &lt;&lt;EOF
+FROM busybox:latest
+COPY vmware-vix-disklib-distrib /vmware-vix-disklib-distrib
+RUN mkdir -p /opt
+ENTRYPOINT ["cp", "-r", "/vmware-vix-disklib-distrib", "/opt"]
+EOF</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Build the VDDK image:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ podman build . -t &lt;image&gt; <i class="conum" data-value="1"></i><b>(1)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Specify the image, for example, <code>image-registry.openshift-image-registry.svc:5000/openshift/vddk:latest</code> or <code>registry.example.com:5000/vddk:latest</code>.</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Push the VDDK image to the registry:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ podman push &lt;image&gt;</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Patch the <code>v2v-vmware</code> config map to add the <code>vddk-init-image</code> field:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ oc patch configmap/v2v-vmware -n openshift-cnv \
+    -p '{"data": {"vddk-init-image": "&lt;image&gt;"}}'</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="increasing-esxi-nfc-service-memory_forklift">Increasing the NFC service memory of an ESXi host</h4>
+<div class="paragraph">
+<p>If you are performing more than 10 concurrent migrations from a single ESXi host, you must increase the NFC service memory of the host to enable additional connections for migrations. Otherwise, the migration will fail because the NFC service memory is limited to 10 parallel connections.</p>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Log in to the ESXi host as root.</p>
+</li>
+<li>
+<p>Change the value of <code>maxMemory</code> to <code>1000000000</code> in <code>/etc/vmware/hostd/config.xml</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">...
+      &lt;nfcsvc&gt;
+         &lt;path&gt;libnfcsvc.so&lt;/path&gt;
+         &lt;enabled&gt;true&lt;/enabled&gt;
+         &lt;maxMemory&gt;1000000000&lt;/maxMemory&gt;
+         &lt;maxStreamMemory&gt;10485760&lt;/maxStreamMemory&gt;
+      &lt;/nfcsvc&gt;
+...</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Restart <code>hostd</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-terminal" data-lang="terminal"># /etc/init.d/hostd restart</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You do not need to reboot the host.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="migrating-virtual-machines-to-virt_forklift">Migrating virtual machines to KubeVirt</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can migrate virtual machines to KubeVirt by using the Forklift web console or the command line interface (CLI).</p>
+</div>
+<div class="sect2">
+<h3 id="migrating-vms-web-console_forklift">Migrating virtual machines by using the Forklift web console</h3>
+<div class="paragraph">
+<p>You can migrate virtual machines to KubeVirt by using the Forklift web console.</p>
+</div>
+<div class="paragraph">
+<p>You add the source and target providers and create a network mapping and a storage mapping. Then, you create and run a migration plan.</p>
+</div>
+<div class="sect3">
+<h4 id="adding-virt-provider_forklift">Adding the KubeVirt provider</h4>
+<div class="paragraph">
+<p>You can add the KubeVirt provider by using the Forklift web console.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You must have the <a href="https://docs.openshift.com/container-platform/4.7/authentication/using-service-accounts-in-applications.html">token</a> of a service account with <code>cluster-admin</code> privileges.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>In the web console, navigate to <strong>Providers</strong> and click <strong>Add provider</strong>.</p>
+</li>
+<li>
+<p>Select <strong>KubeVirt</strong> from the <strong>Type</strong> list.</p>
+</li>
+<li>
+<p>Fill in the following fields:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Name</strong>: OKD cluster name to display in the list of providers</p>
+</li>
+<li>
+<p><strong>URL</strong>: OKD cluster API endpoint</p>
+</li>
+<li>
+<p><strong>Service account token</strong>: <code>cluster-admin</code> service account token</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Click <strong>Check connection</strong> to verify the credentials.</p>
+</li>
+<li>
+<p>Click <strong>Add</strong>.</p>
+<div class="paragraph">
+<p>The provider appears in the list of providers.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="adding-source-provider_forklift">Adding a source provider</h4>
+<div class="paragraph">
+<p>You can add VMware as a source provider by using the Forklift web console.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You must have a VMware vCenter user account with administrator privileges.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>In the Forklift web console, click <strong>Providers</strong>.</p>
+</li>
+<li>
+<p>Click <strong>Add provider</strong>.</p>
+</li>
+<li>
+<p>Select <strong>VMware</strong> from the <strong>Type</strong> list.</p>
+</li>
+<li>
+<p>Fill in the following fields:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Name</strong>: Name to display in the list of providers</p>
+</li>
+<li>
+<p><strong>Hostname or IP address</strong>: ESXi host name or IP address</p>
+</li>
+<li>
+<p><strong>Username</strong>: ESXi admin user name, for example, <code>administrator@vsphere.local</code></p>
+</li>
+<li>
+<p><strong>Password</strong>: ESXi admin password</p>
+</li>
+<li>
+<p><strong>Certificate SHA1 Fingerprint</strong>: ESXi SHA-1 fingerprint</p>
+<div class="paragraph">
+<p>To obtain the ESXi SHA-1 fingerprint, enter the following command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ openssl s_client \
+    -connect &lt;www.example.com&gt;:443 &lt; /dev/null 2&gt;/dev/null \ <i class="conum" data-value="1"></i><b>(1)</b>
+    | openssl x509 -fingerprint -noout -in /dev/stdin \
+    | cut -d '=' -f 2</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Specify the ESXi host name.</td>
+</tr>
+</table>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Click <strong>Add</strong> to add and save the provider.</p>
+<div class="paragraph">
+<p>The VMware provider appears in the list of providers.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="sect4">
+<h5 id="selecting-migration-network-for-source-provider_forklift">Selecting a migration network for a source provider</h5>
+<div class="paragraph">
+<p>Select a migration network to reduce risk to the VMware environment and to improve migration performance.</p>
+</div>
+<div class="paragraph">
+<p>By default,  Forklift selects the <em>management</em> network of a source provider. However, using the management network for migration can result in poor performance because the network might not have sufficient bandwidth. This situation can have a negative effect on the VMware platform because the disk transfer operation might saturate the network and impede communication between vCenter and the ESXi hosts.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>The migration network must have sufficient throughput, minimum speed of 10 Gbps, for disk transfer.</p>
+</li>
+<li>
+<p>The migration network must be accessible to the KubeVirt nodes through the default gateway.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The source virtual disks are copied by a pod that is connected to the pod network of the target namespace.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>The migration network must have jumbo frames enabled.</p>
+</li>
+<li>
+<p>You must have administrator privileges for each ESXi host.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>In the web console, navigate to <strong>Providers</strong> and click <strong>VMware</strong>.</p>
+</li>
+<li>
+<p>Click the host number in the <strong>Hosts</strong> column beside a VMware provider to view a list of hosts.</p>
+</li>
+<li>
+<p>Select one or more hosts and click <strong>Select migration network</strong>.</p>
+</li>
+<li>
+<p>Complete the following fields:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Network</strong>: Select the migration network.</p>
+</li>
+<li>
+<p><strong>Host admin username</strong>: Specify the ESXi host admin user name, for example, <code>root</code>.</p>
+</li>
+<li>
+<p><strong>Host admin password</strong>: Specify the ESXi host password.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Click <strong>Save</strong>.</p>
+</li>
+<li>
+<p>Verify that the status of each host is <strong>Ready</strong>.</p>
+<div class="paragraph">
+<p>If a host status is not <strong>Ready</strong>, the host might be unreachable on the migration network or the credentials might be incorrect. You can modify the host configuration and save the changes.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The migration network is displayed in the list of ESXi hosts.</p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="creating-network-mapping_forklift">Creating a network mapping</h4>
+<div class="paragraph">
+<p>You can create a network mapping by using the Forklift web console to map source networks to KubeVirt networks.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>You cannot map an opaque network, typically managed by NSX, to a KubeVirt network.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You must add source and target providers to the web console.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>In the web console, navigate to <strong>Mappings</strong> &#8594; <strong>Network</strong>.</p>
+</li>
+<li>
+<p>Click <strong>Create mapping</strong>.</p>
+</li>
+<li>
+<p>Complete the following fields:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Name</strong>: Enter a name to display in the network mappings list.</p>
+</li>
+<li>
+<p><strong>Source provider</strong>: Select a source provider.</p>
+</li>
+<li>
+<p><strong>Target provider</strong>: Select a target provider.</p>
+</li>
+<li>
+<p><strong>Source networks</strong>: Select a source network.</p>
+</li>
+<li>
+<p><strong>Target namespaces/networks</strong>: Select a target network.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Optional: Click <strong>Add</strong> to create additional network mappings or to map multiple source networks to a single target network.</p>
+</li>
+<li>
+<p>Click <strong>Create</strong>.</p>
+<div class="paragraph">
+<p>The network mapping is displayed on the <strong>Network mappings</strong> screen.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="creating-storage-mapping_forklift">Creating a storage mapping</h4>
+<div class="paragraph">
+<p>You can create a storage mapping to map source data stores to KubeVirt storage classes.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You must add source and target providers to the web console.</p>
+</li>
+<li>
+<p>The local and shared persistent storage must support VM migration.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>In the web console, navigate to <strong>Mappings</strong> &#8594; <strong>Storage</strong>.</p>
+</li>
+<li>
+<p>Click <strong>Create mapping</strong>.</p>
+</li>
+<li>
+<p>Complete the following fields:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Name</strong>: Enter a name to display in the storage mappings list.</p>
+</li>
+<li>
+<p><strong>Source provider</strong>: Select a source provider.</p>
+</li>
+<li>
+<p><strong>Target provider</strong>: Select a target provider.</p>
+</li>
+<li>
+<p><strong>Source datastores</strong>: Select a source data store.</p>
+</li>
+<li>
+<p><strong>Target storage classes</strong>: Select a target storage class.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Optional: Click <strong>Add</strong> to create additional storage mappings or to map multiple data stores to a single storage class.</p>
+</li>
+<li>
+<p>Click <strong>Create</strong>.</p>
+<div class="paragraph">
+<p>The mapping is displayed on the <strong>Storage mappings</strong> screen.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="creating-migration-plan_forklift">Creating a migration plan</h4>
+<div class="paragraph">
+<p>You can create a migration plan by using the Forklift web console.</p>
+</div>
+<div class="paragraph">
+<p>A migration plan allows you to group virtual machines that should be migrated together or with the same migration parameters, for example, a percentage of the members of a cluster or a complete application.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You must create a VDDK image and add it to the <code>v2v-vmware</code> config map.</p>
+</li>
+<li>
+<p>You must add source and target providers to the web console.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>In the web console, navigate to <strong>Migration plans</strong> and click <strong>Create migration plan</strong>.</p>
+</li>
+<li>
+<p>Complete the following fields:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Plan name</strong>: Enter a migration plan name to display in the migration plan list.</p>
+</li>
+<li>
+<p><strong>Plan description</strong>: Optional: Brief description of the migration plan.</p>
+</li>
+<li>
+<p><strong>Source provider</strong>: Select a source provider.</p>
+</li>
+<li>
+<p><strong>Target provider</strong>: Select a target provider.</p>
+</li>
+<li>
+<p><strong>Target namespace</strong>: You can type to search for an existing target namespace or create a new namespace.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Click <strong>Next</strong>.</p>
+</li>
+<li>
+<p>Click <strong>By clusters and hosts</strong> or <strong>By folders</strong>, select clusters, hosts, or folders to filter the VMs, and then click <strong>Next</strong>.</p>
+</li>
+<li>
+<p>Select the VMs to migrate and click <strong>Next</strong>.</p>
+</li>
+<li>
+<p>Select an existing network mapping or create a new network mapping.</p>
+</li>
+<li>
+<p>Optional: If you select <strong>Create a new network mapping</strong>, select a target network for each source network.</p>
+</li>
+<li>
+<p>Optional: Select <strong>Save mapping to use again</strong> and enter a network mapping name.</p>
+</li>
+<li>
+<p>Click <strong>Next</strong>.</p>
+</li>
+<li>
+<p>Select an existing storage mapping or create a new storage mapping.</p>
+</li>
+<li>
+<p>Optional: If you select <strong>Create a new storage mapping</strong>, select a target storage class for each source data store.</p>
+</li>
+<li>
+<p>Optional: Select <strong>Save mapping to use again</strong> and enter a storage mapping name.</p>
+</li>
+<li>
+<p>Click <strong>Next</strong>.</p>
+</li>
+<li>
+<p>Review your migration plan and click <strong>Finish</strong>.</p>
+<div class="paragraph">
+<p>The migration plan is saved in the migration plan list.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="running-migration-plan_forklift">Running a migration plan</h4>
+<div class="paragraph">
+<p>You can run a migration plan and view its progress in the web console.</p>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>In the web console, navigate to <strong>Migration plans</strong>.</p>
+<div class="paragraph">
+<p>The <strong>Migration plans</strong> list displays the source and target providers, the number of VMs being migrated, and the status of the plan.</p>
+</div>
+</li>
+<li>
+<p>Click <strong>Start</strong> beside a migration plan with a <strong>Ready</strong> status to run the plan.</p>
+</li>
+<li>
+<p>To view the <strong>Migration Details by VM</strong> screen, click the name of a migration plan.</p>
+<div class="paragraph">
+<p>This screen displays the migration start and end time, the amount of data copied, and a progress pipeline for each VM being migrated.</p>
+</div>
+</li>
+<li>
+<p>Optional: Click a VM to view the migration steps, elapsed time of each step, and the state.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="migrating-virtual-machines-cli_forklift">Migrating virtual machines from the CLI</h3>
+<div class="paragraph">
+<p>You can migrate virtual machines from the command line (CLI) by creating the following custom resources (CRs):</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>Secret</code> CR: Contains the VMware provider credentials.</p>
+</li>
+<li>
+<p><code>Provider</code> CR: Describes the VMware provider.</p>
+</li>
+<li>
+<p><code>Plan</code> CR: Describes the source and target clusters, network mappings, data store mappings, and VMs to migrate.</p>
+</li>
+<li>
+<p><code>Migration</code> CR: Runs the <code>Plan</code> CR.</p>
+<div class="paragraph">
+<p>If a migration does not complete, you can create a new <code>Migration</code> CR, without changing the <code>Plan</code> CR, to migrate the remaining VMs. You can associate multiple <code>Migration</code> CRs with a single <code>Plan</code> CR.</p>
+</div>
+</li>
+</ul>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You must install OKD 4.7 on your cluster.</p>
+</li>
+<li>
+<p>You must install the KubeVirt Operator.</p>
+</li>
+<li>
+<p>You must install the <a href="https://docs.openshift.com/container-platform/4.7/cli_reference/openshift_cli/getting-started-cli.html">OpenShift CLI</a>.</p>
+</li>
+<li>
+<p>You must create a VDDK image and add it to the <code>v2v-vmware</code> config map.</p>
+</li>
+<li>
+<p>You must log in as a user with <code>cluster-admin</code> privileges.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Obtain the SSL thumbprint of the vCenter host:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ openssl s_client \
+    -connect &lt;vcenter_host&gt;:443 \ <i class="conum" data-value="1"></i><b>(1)</b>
+    &lt; /dev/null 2&gt;/dev/null \
+    | openssl x509 -fingerprint -noout -in /dev/stdin \
+    | cut -d '=' -f 2</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Specify the vCenter host name.</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Example output</div>
+<div class="content">
+<pre class="highlight"><code class="language-terminal" data-lang="terminal">01:23:45:67:89:AB:CD:EF:01:23:45:67:89:AB:CD:EF:01:23:45:67</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create a <code>Secret</code> CR for the VMware provider:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ cat &lt;&lt; EOF | oc apply -f -
+apiVersion: v1
+kind: Secret
+metadata:
+  name: vmware-secret
+  namespace: konveyor-forklift
+type: Opaque
+stringData:
+  user: &lt;user_name&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+  password: &lt;password&gt; <i class="conum" data-value="2"></i><b>(2)</b>
+  thumbprint: &lt;vcenter_thumbprint&gt; <i class="conum" data-value="3"></i><b>(3)</b>
+EOF</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Specify the vCenter administrator account, for example, <code>administrator@vsphere.local</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Specify the vCenter password.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Specify the SSL thumbprint of the vCenter host.</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Create a <code>Provider</code> CR for the VMware provider:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ cat &lt;&lt; EOF | oc apply -f -
+apiVersion: virt.konveyor.io/v1alpha1
+kind: Provider
+metadata:
+  name: vmware-provider
+  namespace: konveyor-forklift
+spec:
+  type: vsphere
+  url: &lt;api_end_point&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+  secret:
+    name: &lt;vmware_secret&gt; <i class="conum" data-value="2"></i><b>(2)</b>
+    namespace: konveyor-forklift
+EOF</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Specify the vSphere API end point, for example, <code>https://vcenter.host.com/sdk</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Specify the name of the VMware <code>Secret</code> CR.</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Create a <code>Plan</code> CR for the migration:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ cat &lt;&lt; EOF | oc apply -f -
+apiVersion: virt.konveyor.io/v1alpha1
+kind: Plan
+metadata:
+  name: &lt;plan_name&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+  namespace: konveyor-forklift
+spec:
+  provider:
+    source:
+      name: vmware-provider
+      namespace: konveyor-forklift
+    destination:
+      name: destination-cluster
+      namespace: konveyor-forklift
+  map:
+    networks: <i class="conum" data-value="2"></i><b>(2)</b>
+      - source: <i class="conum" data-value="3"></i><b>(3)</b>
+          id: &lt;source_network_mor&gt; <i class="conum" data-value="4"></i><b>(4)</b>
+          name: &lt;source_network_name&gt;
+        destination:
+          type: pod
+          name: pod
+          namespace: konveyor-forklift
+    datastores: <i class="conum" data-value="5"></i><b>(5)</b>
+      - source: <i class="conum" data-value="6"></i><b>(6)</b>
+          id: &lt;source_datastore_mor&gt; <i class="conum" data-value="7"></i><b>(7)</b>
+          name: &lt;source_datastore_name&gt;
+        destination:
+          storageClass: standard
+  vms: <i class="conum" data-value="8"></i><b>(8)</b>
+    - id: &lt;source_vm_mor&gt; <i class="conum" data-value="9"></i><b>(9)</b>
+    - name: &lt;source_vm_name&gt;
+EOF</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Specify the name of the <code>Plan</code> CR.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>You can create multiple network mappings for source and destination networks.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>You can use either the <code>id</code> <em>or</em> the <code>name</code> parameter to specify the source network.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td><em>Managed object reference</em> of the source network.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>You can create multiple storage mappings for source data stores and destination storage classes.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>You can use either the <code>id</code> <em>or</em> the <code>name</code> parameter to specify the source data store.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="7"></i><b>7</b></td>
+<td><em>Managed object reference</em> of the source data store.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="8"></i><b>8</b></td>
+<td>You can use either the <code>id</code> <em>or</em> the <code>name</code> parameter to specify the source VM.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="9"></i><b>9</b></td>
+<td><em>Managed object reference</em> of the source VM.</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Create a <code>Migration</code> CR to run the <code>Plan</code> CR:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ cat &lt;&lt; EOF | oc apply -f -
+apiVersion: virt.konveyor.io/v1alpha1
+kind: Migration
+metadata:
+  name: &lt;migration_name&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+  namespace: konveyor-forklift
+spec:
+  plan:
+    name: &lt;plan_name&gt; <i class="conum" data-value="2"></i><b>(2)</b>
+    namespace: konveyor-forklift
+EOF</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Specify the name of the <code>Migration</code> CR.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Specify the name of the <code>Plan</code> CR that you are running.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The <code>Migration</code> CR creates a <code>VirtualMachineImport</code> CR for each VM that is migrated.</p>
+</div>
+</li>
+<li>
+<p>Monitor the progress of the migration by viewing the <code>VirtualMachineImport</code> pods:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ oc get pods -n konveyor-forklift</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="uninstalling-mtv_forklift">Uninstalling  Forklift</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can uninstall  Forklift by using the OKD web console or the command line interface (CLI).</p>
+</div>
+<div class="sect2">
+<h3 id="uninstalling-mtv-ui_forklift">Uninstalling Forklift by using the OKD web console</h3>
+<div class="paragraph">
+<p>You can uninstall Forklift by using the OKD web console to delete the <code>konveyor-forklift</code> project and custom resource definitions (CRDs).</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You must log in as a user with <code>cluster-admin</code> privileges.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Navigate to <strong>Home</strong> &#8594; <strong>Projects</strong>.</p>
+</li>
+<li>
+<p>Enter <code>forklift</code> in the <strong>Search</strong> field to locate the konveyor-forklift project.</p>
+</li>
+<li>
+<p>On the right side of the project, select <strong>Delete Project</strong> from the Options menu <span class="image"><img src="../modules/images/kebab.png" alt="kebab" height="20" title="Options menu"></span>.</p>
+</li>
+<li>
+<p>In the <strong>Delete Project</strong> pane, enter the project name and click <strong>Delete</strong>.</p>
+</li>
+<li>
+<p>Navigate to <strong>Administration</strong> &#8594; <strong>CustomResourceDefinitions</strong>.</p>
+</li>
+<li>
+<p>Enter <code>forklift</code> in the <strong>Search</strong> field to locate the CRDs in the <code>forklift.konveyor.io</code> group.</p>
+</li>
+<li>
+<p>On the right side of each CRD, select <strong>Delete CustomResourceDefinition</strong> from the Options menu <span class="image"><img src="../modules/images/kebab.png" alt="kebab" height="20" title="Options menu"></span>.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="uninstalling-mtv-cli_forklift">Uninstalling Forklift from the CLI</h3>
+<div class="paragraph">
+<p>You can uninstall Forklift from the command line interface (CLI) by deleting the <code>konveyor-forklift</code> project and the <code>forklift.konveyor.io</code> custom resource definitions (CRDs).</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You must log in as a user with <code>cluster-admin</code> privileges.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Delete the project:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ oc delete project konveyor-forklift</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Delete the CRDs:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ oc get crd -o name | grep "forklift.konveyor.io" | xargs oc delete</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+
+      <footer class="site-footer">
+        
+          <span class="site-footer-owner"><a href="https://github.com/konveyor/forklift-documentation">forklift-documentation</a> is maintained by <a href="https://github.com/konveyor">konveyor</a>.</span>
+        
+      </footer>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+
+    
+    <meta charset="UTF-8">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Forklift Documentation | Forklift documentation</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Forklift Documentation" />
+<meta name="author" content="Red Hat Modernization and Migration Solutions documentation team" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Forklift documentation" />
+<meta property="og:description" content="Forklift documentation" />
+<meta property="og:site_name" content="Forklift Documentation" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Forklift Documentation" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"Red Hat Modernization and Migration Solutions documentation team"},"url":"/documentation/doc-Migration_Toolkit_for_Virtualization/modules/installing-mtv-cli/","description":"Forklift documentation","@type":"WebPage","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/assets/img/forklift-logo-darkbg.svg"},"name":"Red Hat Modernization and Migration Solutions documentation team"},"headline":"Forklift Documentation","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#157878">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="stylesheet" href="/assets/css/style.css?v=5c266955b895ec4f92493ddf95f23883255b32d6">
+    <link rel="shortcut icon" type="image/png" href="images/favicon.png">
+  </head>
+  <body>
+    <header class="page-header">
+        
+          <a href="/"><img src="/assets/img/forklift-logo-darkbg.svg" alt="Forklift Documentation" width="200" /></a><br>
+        
+      
+        <a href="https://github.com/konveyor/forklift-documentation" class="btn">View on GitHub</a>
+      
+      
+    </header>
+
+    <main id="content" class="main-content" role="main">
+      <h1 id="installing-mtv-cli_forklift">Installing  Forklift from the CLI</h1>
+<div class="paragraph">
+<p>You can install  Forklift from the command line interface (CLI).</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>The source cluster must be VMware vSphere 6.5 or later.</p>
+</li>
+<li>
+<p>If you are performing more than 10 concurrent migrations from a single ESXi host, you must increase the NFC service memory of the host.</p>
+</li>
+<li>
+<p>You must install OKD 4.7 on the target cluster.</p>
+</li>
+<li>
+<p>You must install the KubeVirt Operator.</p>
+</li>
+<li>
+<p>You must log in as a user with <code>cluster-admin</code> permissions.</p>
+</li>
+<li>
+<p>VMware virtual machines:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://www.vmware.com/support/ws5/doc/new_guest_tools_ws.html">VMware Tools</a> must be installed.</p>
+</li>
+<li>
+<p>ISO/CDROM disks must be unmounted.</p>
+</li>
+<li>
+<p>A NIC must have no more than one IPv4 and/or one IPv6 address.</p>
+</li>
+<li>
+<p>The VM name can contain lowercase letters (<code>a-z</code>), numbers (<code>0-9</code>), and hyphens (<code>-</code>), up to a maximum of 253 characters. The first and last characters must be alphanumeric. The name must not contain uppercase letters, spaces, periods (<code>.</code>), or special characters.</p>
+</li>
+<li>
+<p>The VM name must not duplicate the name of a virtual machine in the KubeVirt environment.</p>
+</li>
+<li>
+<p>The operating system must be certified and supported <a href="https://access.redhat.com/articles/973163#ocpvirt">for use as a guest operating system with KubeVirt</a> <em>and</em> <a href="https://access.redhat.com/articles/1351473">for conversion to KVM with <code>virt-v2v</code></a>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Network:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>IP addresses, VLANs, and other network configuration settings must not be changed before or after migration. The MAC addresses of the virtual machines are preserved during migration.</p>
+</li>
+<li>
+<p>The network connections between the clusters and the replication repository must be uninterrupted and reliable.</p>
+</li>
+<li>
+<p>The firewall rules must enable traffic over the network ports required for migration.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Required network ports</caption>
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 33.3336%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Port</th>
+<th class="tableblock halign-left valign-top">Protocol</th>
+<th class="tableblock halign-left valign-top">Source</th>
+<th class="tableblock halign-left valign-top">Destination</th>
+<th class="tableblock halign-left valign-top">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">443</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TCP</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OpenShift nodes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">VMware vCenter</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>VMware provider inventory</p>
+</div>
+<div class="paragraph">
+<p>Disk transfer authentication</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">443</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TCP</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OpenShift nodes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">VMware ESXi hosts</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Disk transfer authentication</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">902</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TCP</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OpenShift nodes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">VMware ESXi hosts</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Disk transfer data copy</p></td>
+</tr>
+</tbody>
+</table>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>Create the konveyor-forklift project:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ cat &lt;&lt; EOF | oc apply -f -
+apiVersion: project.openshift.io/v1
+kind: Project
+metadata:
+  name: konveyor-forklift
+EOF</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create an <code>OperatorGroup</code> CR called <code>migration</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ cat &lt;&lt; EOF | oc apply -f -
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: migration
+  namespace: konveyor-forklift
+spec:
+  targetNamespaces:
+    - konveyor-forklift
+EOF</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create a <code>Subscription</code> CR for the Operator:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ cat &lt;&lt; EOF | oc apply -f -
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: forklift-operator
+  namespace: konveyor-forklift
+spec:
+  channel: development
+  installPlanApproval: Automatic
+  name: forklift-operator
+  source: community-operators
+  sourceNamespace: openshift-marketplace
+  startingCSV: "konveyor-forklift-operator.v2.0.0-beta.0"
+EOF</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Create a <code>ForkliftController</code> CR:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ cat &lt;&lt; EOF | oc apply -f -
+apiVersion: forklift.konveyor.io/v1alpha1
+kind: ForkliftController
+metadata:
+  name: forklift-controller
+  namespace: konveyor-forklift
+spec:
+  olm_managed: true
+EOF</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Verify that the Forklift pods are running:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ oc get pods -n konveyor-forklift</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Example output</div>
+<div class="content">
+<pre>NAME                                   READY   STATUS    RESTARTS   AGE
+forklift-controller-788bdb4c69-mw268   2/2     Running   0          2m
+forklift-operator-6bf45b8d8-qps9v      1/1     Running   0          5m
+forklift-ui-7cdf96d8f6-xnw5n           1/1     Running   0          2m</pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+
+      <footer class="site-footer">
+        
+          <span class="site-footer-owner"><a href="https://github.com/konveyor/forklift-documentation">forklift-documentation</a> is maintained by <a href="https://github.com/konveyor">konveyor</a>.</span>
+        
+      </footer>
+    </main>
+  </body>
+</html>

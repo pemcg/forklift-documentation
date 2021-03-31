@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+
+    
+    <meta charset="UTF-8">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Forklift Documentation | Forklift documentation</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Forklift Documentation" />
+<meta name="author" content="Red Hat Modernization and Migration Solutions documentation team" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Forklift documentation" />
+<meta property="og:description" content="Forklift documentation" />
+<meta property="og:site_name" content="Forklift Documentation" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Forklift Documentation" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"Red Hat Modernization and Migration Solutions documentation team"},"url":"/documentation/doc-Migration_Toolkit_for_Virtualization/modules/adding-source-provider/","description":"Forklift documentation","@type":"WebPage","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/assets/img/forklift-logo-darkbg.svg"},"name":"Red Hat Modernization and Migration Solutions documentation team"},"headline":"Forklift Documentation","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#157878">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="stylesheet" href="/assets/css/style.css?v=5c266955b895ec4f92493ddf95f23883255b32d6">
+    <link rel="shortcut icon" type="image/png" href="images/favicon.png">
+  </head>
+  <body>
+    <header class="page-header">
+        
+          <a href="/"><img src="/assets/img/forklift-logo-darkbg.svg" alt="Forklift Documentation" width="200" /></a><br>
+        
+      
+        <a href="https://github.com/konveyor/forklift-documentation" class="btn">View on GitHub</a>
+      
+      
+    </header>
+
+    <main id="content" class="main-content" role="main">
+      <h1 id="adding-source-provider_forklift">Adding a source provider</h1>
+<div class="paragraph">
+<p>You can add VMware as a source provider by using the Forklift web console.</p>
+</div>
+<div class="ulist">
+<div class="title">Prerequisites</div>
+<ul>
+<li>
+<p>You must have a VMware vCenter user account with administrator privileges.</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">Procedure</div>
+<ol class="arabic">
+<li>
+<p>In the Forklift web console, click <strong>Providers</strong>.</p>
+</li>
+<li>
+<p>Click <strong>Add provider</strong>.</p>
+</li>
+<li>
+<p>Select <strong>VMware</strong> from the <strong>Type</strong> list.</p>
+</li>
+<li>
+<p>Fill in the following fields:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Name</strong>: Name to display in the list of providers</p>
+</li>
+<li>
+<p><strong>Hostname or IP address</strong>: ESXi host name or IP address</p>
+</li>
+<li>
+<p><strong>Username</strong>: ESXi admin user name, for example, <code>administrator@vsphere.local</code></p>
+</li>
+<li>
+<p><strong>Password</strong>: ESXi admin password</p>
+</li>
+<li>
+<p><strong>Certificate SHA1 Fingerprint</strong>: ESXi SHA-1 fingerprint</p>
+<div class="paragraph">
+<p>To obtain the ESXi SHA-1 fingerprint, enter the following command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-terminal" data-lang="terminal">$ openssl s_client \
+    -connect &lt;www.example.com&gt;:443 &lt; /dev/null 2&gt;/dev/null \ <b class="conum">(1)</b>
+    | openssl x509 -fingerprint -noout -in /dev/stdin \
+    | cut -d '=' -f 2</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>Specify the ESXi host name.</p>
+</li>
+</ol>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Click <strong>Add</strong> to add and save the provider.</p>
+<div class="paragraph">
+<p>The VMware provider appears in the list of providers.</p>
+</div>
+</li>
+</ol>
+</div>
+
+      <footer class="site-footer">
+        
+          <span class="site-footer-owner"><a href="https://github.com/konveyor/forklift-documentation">forklift-documentation</a> is maintained by <a href="https://github.com/konveyor">konveyor</a>.</span>
+        
+      </footer>
+    </main>
+  </body>
+</html>
